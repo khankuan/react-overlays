@@ -1,17 +1,19 @@
 import React from 'react';
-
+import { findDOMNode } from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
-import Editor from 'component-playground';
-import hyphenate from 'dom-helpers/util/hyphenateStyle';
+import Editor from '@jquense/component-playground';
 
 import PropTable from './PropTable';
 
+import AffixSource from '../webpack/example-loader!./Affix';
 import ModalExample from '../webpack/example-loader!./Modal';
 import OverlaySource from '../webpack/example-loader!./Overlay';
 import PortalSource from '../webpack/example-loader!./Portal';
 import PositionSource from '../webpack/example-loader!./Position';
 import TransitionSource from '../webpack/example-loader!./Transition';
 
+import AffixMetadata from '../webpack/metadata-loader!react-overlays/Affix';
+import AutoAffixMetadata from '../webpack/metadata-loader!react-overlays/AutoAffix';
 import PortalMetadata from '../webpack/metadata-loader!react-overlays/Portal';
 import PositionMetadata from '../webpack/metadata-loader!react-overlays/Position';
 import OverlayMetadata from '../webpack/metadata-loader!react-overlays/Overlay';
@@ -19,11 +21,14 @@ import ModalMetadata from '../webpack/metadata-loader!react-overlays/Modal';
 import TransitionMetadata from '../webpack/metadata-loader!react-overlays/Transition';
 
 import * as ReactOverlays from 'react-overlays';
+import getOffset from 'dom-helpers/query/offset';
 
 import './styles.less';
 import injectCss from './injectCss';
 
-let scope = { React, Button, injectCss, ...ReactOverlays };
+let scope = {
+  React, findDOMNode, Button, injectCss, ...ReactOverlays, getOffset
+};
 
 const Anchor = React.createClass({
   propTypes: {
@@ -41,6 +46,25 @@ const Anchor = React.createClass({
   }
 });
 
+const ExampleEditor = React.createClass({
+  propTypes: {
+    codeText: React.PropTypes.string
+  },
+  render() {
+    return (
+      <Editor
+        className='overlay-example'
+        lineNumbers={false}
+        lang="js"
+        theme="neo"
+        scope={scope}
+        codeText={this.props.codeText}
+        collapsableCode
+      />
+    );
+  }
+});
+
 const Example = React.createClass({
 
   render() {
@@ -54,6 +78,7 @@ const Example = React.createClass({
             <li><a href='#modals'>Modals</a></li>
             <li><a href='#position'>Position</a></li>
             <li><a href='#overlay'>Overlay</a></li>
+            <li><a href='#affixes'>Affixes</a></li>
           </ul>
         </article>
         <main className='col-md-10'>
@@ -62,15 +87,7 @@ const Example = React.createClass({
               <Anchor>Transition</Anchor>
             </h2>
             <p dangerouslySetInnerHTML={{__html: TransitionMetadata.Transition.descHtml }}/>
-            <Editor
-              className='overlay-example'
-              lineNumbers={false}
-              lang="js"
-              theme="neo"
-              scope={scope}
-              codeText={TransitionSource}
-              collapsableCode
-            />
+            <ExampleEditor codeText={TransitionSource} />
             <PropTable
               component='Transition'
               metadata={TransitionMetadata}
@@ -81,15 +98,7 @@ const Example = React.createClass({
               <Anchor>Portals</Anchor>
             </h2>
             <p dangerouslySetInnerHTML={{__html: PortalMetadata.Portal.descHtml }}/>
-            <Editor
-              className='overlay-example'
-              lineNumbers={false}
-              lang="js"
-              theme="neo"
-              scope={scope}
-              codeText={PortalSource}
-              collapsableCode
-            />
+            <ExampleEditor codeText={PortalSource} />
             <PropTable
               component='Portal'
               metadata={PortalMetadata}
@@ -100,16 +109,7 @@ const Example = React.createClass({
               <Anchor>Modals</Anchor>
             </h2>
             <p dangerouslySetInnerHTML={{__html: ModalMetadata.Modal.descHtml }}/>
-            <Editor
-              className='overlay-example'
-              lineNumbers={false}
-              lang="js"
-              theme="neo"
-              scope={scope}
-              codeText={ModalExample}
-              collapsableCode
-            />
-
+            <ExampleEditor codeText={ModalExample} />
             <PropTable
               component='Modal'
               metadata={ModalMetadata}
@@ -120,15 +120,7 @@ const Example = React.createClass({
               <Anchor>Position</Anchor>
             </h2>
             <p dangerouslySetInnerHTML={{__html: PositionMetadata.Position.descHtml }}/>
-            <Editor
-              className='overlay-example'
-              lineNumbers={false}
-              lang="js"
-              theme="neo"
-              scope={scope}
-              codeText={PositionSource}
-              collapsableCode
-            />
+            <ExampleEditor codeText={PositionSource} />
             <PropTable
               component='Position'
               metadata={PositionMetadata}
@@ -139,19 +131,26 @@ const Example = React.createClass({
               <Anchor>Overlay</Anchor>
             </h2>
             <p dangerouslySetInnerHTML={{__html: OverlayMetadata.Overlay.descHtml }}/>
-            <Editor
-              className='overlay-example'
-              lineNumbers={false}
-              lang="js"
-              theme="neo"
-              scope={scope}
-              codeText={OverlaySource}
-              collapsableCode
-            />
-
+            <ExampleEditor codeText={OverlaySource} />
             <PropTable
               component='Overlay'
               metadata={OverlayMetadata}
+            />
+          </section>
+          <section>
+            <h2 className='page-header'>
+              <Anchor>Affixes</Anchor>
+            </h2>
+            <p dangerouslySetInnerHTML={{__html: AffixMetadata.Affix.descHtml }}/>
+            <p dangerouslySetInnerHTML={{__html: AutoAffixMetadata.AutoAffix.descHtml }}/>
+            <ExampleEditor codeText={AffixSource} />
+            <PropTable
+              component='Affix'
+              metadata={AffixMetadata}
+            />
+            <PropTable
+              component='AutoAffix'
+              metadata={AutoAffixMetadata}
             />
           </section>
         </main>
@@ -160,4 +159,4 @@ const Example = React.createClass({
   }
 });
 
-React.render(<Example/>, document.body);
+React.render(<Example/>, document.getElementById('app-container'));
