@@ -1,3 +1,38 @@
+## [v0.6.1]
+> 2016-03-28
+
+- **Bugfix:** Flush new props to DOM before initiating transitions ([#60])
+- **Bugfix:** Update `<Portal>` container node when `container` prop changes ([#66])
+- **Bugfix:** Don't invooke close in `<RootCloseWrapper>` on right clicks ([#69])
+
+[v0.6.1]: https://github.com/react-bootstrap/react-overlays/compare/v0.6.0...v0.6.1
+[#60]: https://github.com/react-bootstrap/react-overlays/pull/60
+[#66]: https://github.com/react-bootstrap/react-overlays/pull/66
+[#69]: https://github.com/react-bootstrap/react-overlays/pull/69
+
+
+v0.6.0 - Fri, 15 Jan 2016 16:15:50 GMT
+--------------------------------------
+
+- [c0b5890](../../commit/c0b5890) [fixed] Don't forward own props from <Position>
+- [742c3c1](../../commit/742c3c1) [fixed] Modal does not fire show callback
+
+
+
+v0.5.4 - Tue, 17 Nov 2015 20:03:06 GMT
+--------------------------------------
+
+- [4eabbfc](../../commit/4eabbfc) [added] affix state callbacks
+
+
+
+v0.5.3 - Mon, 16 Nov 2015 19:52:03 GMT
+--------------------------------------
+
+- [d064667](../../commit/d064667) [fixed] AutoAffix nnot passing width or updating
+
+
+
 v0.5.2 - Mon, 16 Nov 2015 17:32:27 GMT
 --------------------------------------
 

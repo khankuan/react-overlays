@@ -1,6 +1,6 @@
 {
   "name": "react-overlays",
-  "version": "0.5.2",
+  "version": "0.6.1",
   "description": "Utilities for creating robust overlay components",
   "author": "Jason Quense <monastic.panic@gmail.com>",
   "repository": "react-bootstrap/react-overlays",
@@ -8,8 +8,6 @@
   "main": "lib/index.js",
   "files": [
     "lib/",
-    "LICENSE",
-    "README.md",
     "CHANGELOG.md"
   ],
   "keywords": [
@@ -33,27 +31,26 @@
     "test": "npm run lint && karma start --single-run",
     "tdd": "karma start",
     "coverage": "COVERAGE=true karma start --single-run",
-    "patch": "release patch",
-    "minor": "release minor",
-    "major": "release major"
+    "release": "release"
   },
   "peerDependencies": {
     "react": ">=0.14.0",
     "react-dom": "^0.14.0"
   },
   "devDependencies": {
+    "@jquense/component-playground": "jquense/component-playground",
     "babel": "5.6.14",
-    "babel-core": "5.6.15",
-    "babel-eslint": "^3.1.20",
+    "babel-core": "^5.8.34",
+    "babel-eslint": "^4.1.6",
     "babel-loader": "^5.3.0",
     "babel-plugin-object-assign": "^1.2.1",
     "chai": "^3.2.0",
-    "component-playground": "jquense/component-playground",
+    "component-metadata-loader": "^2.0.0",
     "css-loader": "^0.15.6",
     "es5-shim": "^4.1.7",
-    "eslint": "^0.24.0",
-    "eslint-plugin-babel": "^1.0.0",
-    "eslint-plugin-mocha": "^0.4.0",
+    "eslint": "^1.10.1",
+    "eslint-plugin-babel": "^3.0.0",
+    "eslint-plugin-mocha": "^1.1.0",
     "eslint-plugin-react": "^3.1.0",
     "isparta-loader": "^0.2.0",
     "jquery": "^2.1.4",
@@ -70,9 +67,9 @@
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
     "lodash": "^3.10.0",
+    "lolex": "^1.4.0",
     "marked": "^0.3.5",
     "mocha": "^2.2.5",
-    "mt-changelog": "^0.6.1",
     "node-libs-browser": "^0.5.2",
     "raw-loader": "^0.5.1",
     "react": "^0.14.0",
@@ -87,6 +84,7 @@
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.12.3",
+    "teaspoon": "^6.1.1",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0",
     "yargs": "^3.14.0"

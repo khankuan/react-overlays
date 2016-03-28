@@ -92,6 +92,51 @@ describe('Position', function () {
       expect(overlayPositionUtils.calcOverlayPosition)
         .to.have.been.calledTwice;
     });
+
+    it('Should recalculate position if shouldUpdatePosition prop is true', function () {
+      class Target extends React.Component {
+        constructor(props) {
+          super(props);
+
+          this.state = {
+            target: 'bar',
+            fakeProp: 0
+          };
+        }
+
+        render() {
+          return (
+            <div>
+              <div ref="bar" />
+
+              <Position
+                target={() => this.refs[this.state.target]}
+                shouldUpdatePosition
+                fakeProp={this.state.fakeProp}
+              >
+                <div />
+              </Position>
+            </div>
+          );
+        }
+      }
+
+      const instance = ReactTestUtils.renderIntoDocument(<Target />);
+
+      // Position calculates initial position.
+      expect(Position.prototype.componentWillReceiveProps)
+        .to.have.not.been.called;
+      expect(overlayPositionUtils.calcOverlayPosition)
+        .to.have.been.calledOnce;
+
+      instance.setState({fakeProp: 1});
+
+      // Position receives new props and position should be recalculated
+      expect(Position.prototype.componentWillReceiveProps)
+        .to.have.been.calledOnce;
+      expect(overlayPositionUtils.calcOverlayPosition)
+        .to.have.been.calledTwice;
+    });
   });
 
   describe('position calculation', function () {
@@ -143,6 +188,14 @@ describe('Position', function () {
               >
                 <FakeOverlay ref="overlay" />
               </Position>
+              <Position
+                target={() => this.refs.target}
+                container={() => this}
+                containerPadding={50}
+                placement={placement}
+              >
+                <FakeOverlay ref="overlay_for_callback_container" />
+              </Position>
             </div>
           );
         }
@@ -158,11 +211,13 @@ describe('Position', function () {
       it('Should calculate the correct position', function() {
         const instance = render(<FakeContainer />, mountPoint);
 
-        const calculatedPosition = pick(
-          instance.refs.overlay.props, Object.keys(expectedPosition)
-        );
+        ['overlay', 'overlay_for_callback_container'].forEach(function(overlayRefName) {
+          const calculatedPosition = pick(
+            instance.refs[overlayRefName].props, Object.keys(expectedPosition)
+          );
+          expect(calculatedPosition).to.eql(expectedPosition);
 
-        expect(calculatedPosition).to.eql(expectedPosition);
+        });
       });
     }
 
@@ -214,6 +269,27 @@ describe('Position', function () {
         });
       });
     });
+
+    describe('calculate using container callback function', function () {
+
+    });
+  });
+
+  it('should not forward own props to child', function () {
+    let spiedProps;
+    const Child = (props) => {
+      spiedProps = props;
+      return <div />;
+    };
+
+    ReactTestUtils.renderIntoDocument(
+      <Position target={() => null} childProp="foo">
+        <Child />
+      </Position>
+    );
+
+    expect(spiedProps.target).to.not.exist;
+    expect(spiedProps.childProp).to.equal('foo');
   });
 
   // ToDo: add remaining tests

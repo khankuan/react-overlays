@@ -180,8 +180,7 @@ describe('Modal', function () {
           <strong>Message</strong>
         </Modal>
       , mountPoint);
-    }).to.throw(
-      'Invariant Violation: onlyChild must be passed a children with exactly one child.');
+    }).to.throw(/onlyChild must be passed a children with exactly one child/);
   });
 
   it('Should add role to child', function () {
@@ -253,12 +252,36 @@ describe('Modal', function () {
         onEntering={increment}
         onEntered={()=> {
           increment();
-          instance.setProps({ show: false });
+          instance.renderWithProps({ show: false });
         }}
       >
         <strong>Message</strong>
       </Modal>
       , mountPoint);
+  });
+
+  it('Should fire show callback on mount', function () {
+    let onShowSpy = sinon.spy();
+    render(
+      <Modal show onShow={onShowSpy}>
+        <strong>Message</strong>
+      </Modal>
+    , mountPoint);
+
+    expect(onShowSpy).to.have.been.calledOnce;
+  });
+
+  it('Should fire show callback on update', function () {
+    let onShowSpy = sinon.spy();
+    let instance = render(
+      <Modal onShow={onShowSpy}>
+        <strong>Message</strong>
+      </Modal>
+    , mountPoint);
+
+    instance.renderWithProps({ show: true });
+
+    expect(onShowSpy).to.have.been.calledOnce;
   });
 
   describe('Focused state', function () {

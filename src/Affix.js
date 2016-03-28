@@ -127,7 +127,18 @@ class Affix extends React.Component {
       return;
     }
 
-    this.setState({affixed, position, top});
+    let upperName = affixed === 'affix'
+      ? '' : affixed.charAt(0).toUpperCase() + affixed.substr(1);
+
+    if (this.props['onAffix' + upperName]) {
+      this.props['onAffix' + upperName]();
+    }
+
+    this.setState({affixed, position, top}, ()=>{
+      if (this.props['onAffixed' + upperName]) {
+        this.props['onAffixed' + upperName]();
+      }
+    });
   }
 
   updateStateAtBottom() {
@@ -170,22 +181,27 @@ Affix.propTypes = {
    * Pixels to offset from top of screen when calculating position
    */
   offsetTop: React.PropTypes.number,
+
   /**
    * When affixed, pixels to offset from top of viewport
    */
   viewportOffsetTop: React.PropTypes.number,
+
   /**
    * Pixels to offset from bottom of screen when calculating position
    */
   offsetBottom: React.PropTypes.number,
+
   /**
    * CSS class or classes to apply when at top
    */
   topClassName: React.PropTypes.string,
+
   /**
    * Style to apply when at top
    */
   topStyle: React.PropTypes.object,
+
   /**
    * CSS class or classes to apply when affixed
    */
@@ -194,14 +210,45 @@ Affix.propTypes = {
    * Style to apply when affixed
    */
   affixStyle: React.PropTypes.object,
+
   /**
    * CSS class or classes to apply when at bottom
    */
   bottomClassName: React.PropTypes.string,
+
   /**
    * Style to apply when at bottom
    */
-  bottomStyle: React.PropTypes.object
+  bottomStyle: React.PropTypes.object,
+
+  /**
+   * Callback fired when the right before the `affixStyle` and `affixStyle` props are rendered
+   */
+  onAffix: React.PropTypes.func,
+  /**
+   * Callback fired after the component `affixStyle` and `affixClassName` props have been rendered.
+   */
+  onAffixed: React.PropTypes.func,
+
+  /**
+   * Callback fired when the right before the `topStyle` and `topClassName` props are rendered
+   */
+  onAffixTop: React.PropTypes.func,
+
+  /**
+   * Callback fired after the component `topStyle` and `topClassName` props have been rendered.
+   */
+  onAffixedTop: React.PropTypes.func,
+
+  /**
+   * Callback fired when the right before the `bottomStyle` and `bottomClassName` props are rendered
+   */
+  onAffixBottom: React.PropTypes.func,
+
+  /**
+   * Callback fired after the component `bottomStyle` and `bottomClassName` props have been rendered.
+   */
+  onAffixedBottom: React.PropTypes.func
 };
 
 Affix.defaultProps = {

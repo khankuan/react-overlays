@@ -30,6 +30,7 @@ class Overlay extends React.Component {
       , containerPadding
       , target
       , placement
+      , shouldUpdatePosition
       , rootClose
       , children
       , transition: Transition
@@ -48,7 +49,7 @@ class Overlay extends React.Component {
     // Position is be inner-most because it adds inline styles into the child,
     // which the other wrappers don't forward correctly.
     child = (
-      <Position {...{container, containerPadding, target, placement}}>
+      <Position {...{container, containerPadding, target, placement, shouldUpdatePosition}}>
         {child}
       </Position>
     );
@@ -102,18 +103,30 @@ class Overlay extends React.Component {
 Overlay.propTypes = {
   ...Portal.propTypes,
   ...Position.propTypes,
+
   /**
    * Set the visibility of the Overlay
    */
   show: React.PropTypes.bool,
+
   /**
-   * Specify whether the overlay should trigger onHide when the user clicks outside the overlay
+   * Specify whether the overlay should trigger `onHide` when the user clicks outside the overlay
    */
   rootClose: React.PropTypes.bool,
+
   /**
    * A Callback fired by the Overlay when it wishes to be hidden.
+   *
+   * __required__ when `rootClose` is `true`.
+   *
+   * @type func
    */
-  onHide: React.PropTypes.func,
+  onHide(props, name, cname) {
+    let pt = React.PropTypes.func;
+
+    if (props.rootClose) pt = pt.isRequired
+    return pt(props, name, cname)
+  },
 
   /**
    * A `<Transition/>` component used to animate the overlay changes visibility.

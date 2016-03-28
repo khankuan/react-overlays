@@ -9,7 +9,7 @@ import { calcOverlayPosition } from './utils/overlayPositionUtils';
 import mountable from 'react-prop-types/lib/mountable';
 
 /**
- * The Position component calulates the corrdinates for its child, to
+ * The Position component calculates the coordinates for its child, to
  * position it relative to a `target` component or node. Useful for creating callouts and tooltips,
  * the Position component injects a `style` props with `left` and `top` values for positioning your component.
  *
@@ -21,8 +21,8 @@ class Position extends React.Component {
     super(props, context);
 
     this.state = {
-      positionLeft: null,
-      positionTop: null,
+      positionLeft: 0,
+      positionTop: 0,
       arrowOffsetLeft: null,
       arrowOffsetTop: null
     };
@@ -55,6 +55,11 @@ class Position extends React.Component {
   render() {
     const {children, className, ...props} = this.props;
     const {positionLeft, positionTop, ...arrowPosition} = this.state;
+
+    // These should not be forwarded to the child.
+    delete props.target;
+    delete props.container;
+    delete props.containerPadding;
 
     const child = React.Children.only(children);
     return cloneElement(
@@ -92,7 +97,7 @@ class Position extends React.Component {
   updatePosition(placementChanged) {
     const target = this.getTargetSafe();
 
-    if (target === this._lastTarget && !placementChanged) {
+    if (!this.props.shouldUpdatePosition && target === this._lastTarget && !placementChanged) {
       return;
     }
 
@@ -100,8 +105,8 @@ class Position extends React.Component {
 
     if (!target) {
       this.setState({
-        positionLeft: null,
-        positionTop: null,
+        positionLeft: 0,
+        positionTop: 0,
         arrowOffsetLeft: null,
         arrowOffsetTop: null
       });
@@ -125,12 +130,17 @@ class Position extends React.Component {
 Position.propTypes = {
   /**
    * Function mapping props to a DOM node the component is positioned next to
+   *
    */
   target: React.PropTypes.func,
+
   /**
    * "offsetParent" of the component
    */
-  container: mountable,
+  container: React.PropTypes.oneOfType([
+    mountable,
+    React.PropTypes.func
+  ]),
   /**
    * Minimum spacing in pixels between container border and component border
    */
@@ -138,14 +148,19 @@ Position.propTypes = {
   /**
    * How to position the component relative to the target
    */
-  placement: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left'])
+  placement: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
+  /**
+   * Whether the position should be changed on each update
+   */
+  shouldUpdatePosition: React.PropTypes.bool
 };
 
 Position.displayName = 'Position';
 
 Position.defaultProps = {
   containerPadding: 0,
-  placement: 'right'
+  placement: 'right',
+  shouldUpdatePosition: false
 };
 
 export default Position;
